@@ -100,12 +100,18 @@
 @layer base {
   * {
     @apply border-border;
+    cursor: none;
+  }
+
+  a, button {
+    cursor: none;
   }
 
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
     overflow-x: hidden;
+    cursor: none;
   }
 
   h1, h2, h3 {
