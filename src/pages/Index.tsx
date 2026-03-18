@@ -20,8 +20,10 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen">
+      <ParticleBackground />
+      <CustomCursor />
       <Sidebar activeSection={activeSection} onNavigate={handleNavigate} />
-      <main className="flex-1 lg:ml-72 w-full max-w-full overflow-x-hidden">
+      <main className="flex-1 lg:ml-72 w-full max-w-full overflow-x-hidden relative z-10">
         <div className="max-w-4xl mx-auto">
           <HeroSection />
           <AboutSection />
