@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Home, User, Briefcase, GraduationCap, FolderOpen, Wrench, Mail, Linkedin, Github, Download, Moon, Sun } from "lucide-react";
+import profileImg from "@/assets/profile.jpeg";
 
 const navItems = [
   { id: "home", label: "HOME", icon: Home },
