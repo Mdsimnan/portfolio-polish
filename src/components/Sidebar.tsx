@@ -64,8 +64,10 @@ const Sidebar = ({ activeSection, onNavigate }: SidebarProps) => {
 
         {/* Profile */}
         <div className="flex flex-col items-center mb-4 px-4">
-          <div className="w-24 h-24 rounded-full border-2 border-primary overflow-hidden mb-3">
-            <img src={profileImg} alt="Mohammed Simnanuddin" className="w-full h-full object-cover" />
+          <div className="w-28 h-28 rounded-full p-[3px] bg-gradient-to-br from-primary via-primary/60 to-primary shadow-[0_0_25px_hsl(var(--primary)/0.4),0_0_50px_hsl(var(--primary)/0.15)] mb-3">
+            <div className="w-full h-full rounded-full border-[3px] border-background overflow-hidden">
+              <img src={profileImg} alt="Mohammed Simnanuddin" className="w-full h-full object-cover" />
+            </div>
           </div>
           <h2 className="font-display text-sm text-primary text-center">Mohammed Simnanuddin</h2>
           <p className="text-xs text-muted-foreground mt-1">Business | Data Analyst</p>
