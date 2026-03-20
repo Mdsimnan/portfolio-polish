@@ -1,18 +1,16 @@
 import { useEffect, useRef } from "react";
 
-interface Trail {
+interface CursorParticle {
   x: number;
   y: number;
-  alpha: number;
-  radius: number;
+  size: number;
 }
 
 const CustomCursor = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouse = useRef({ x: -100, y: -100 });
-  const smoothMouse = useRef({ x: -100, y: -100 });
-  const trails = useRef<Trail[]>([]);
-  const visible = useRef(false);
+  const current = useRef({ x: -100, y: -100 });
+  const trail = useRef<CursorParticle[]>([]);
 
   useEffect(() => {
     if ("ontouchstart" in window) return;
@@ -31,90 +29,57 @@ const CustomCursor = () => {
 
     const handleMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
-      visible.current = true;
     };
 
-    const handleLeave = () => { visible.current = false; };
-    const handleEnter = () => { visible.current = true; };
-
-    const draw = () => {
+    const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Smooth follow
-      smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.15;
-      smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.15;
+      // Smooth follow (lerp)
+      current.current.x += (mouse.current.x - current.current.x) * 0.15;
+      current.current.y += (mouse.current.y - current.current.y) * 0.15;
 
-      if (visible.current) {
-        // Add trail particles
-        trails.current.push({
-          x: smoothMouse.current.x,
-          y: smoothMouse.current.y,
-          alpha: 0.6,
-          radius: 3,
-        });
+      trail.current.push({
+        x: current.current.x,
+        y: current.current.y,
+        size: 2,
+      });
 
-        // Limit trail length
-        if (trails.current.length > 25) trails.current.shift();
-
-        // Draw trails
-        for (let i = 0; i < trails.current.length; i++) {
-          const t = trails.current[i];
-          t.alpha -= 0.025;
-          t.radius *= 0.96;
-
-          if (t.alpha <= 0) {
-            trails.current.splice(i, 1);
-            i--;
-            continue;
-          }
-
-          ctx.beginPath();
-          ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
-          ctx.fillStyle = `hsla(170, 100%, 50%, ${t.alpha})`;
-          ctx.fill();
-        }
-
-        // Draw outer ring
-        ctx.beginPath();
-        ctx.arc(smoothMouse.current.x, smoothMouse.current.y, 16, 0, Math.PI * 2);
-        ctx.strokeStyle = "hsla(170, 100%, 50%, 0.35)";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Glow around ring
-        ctx.beginPath();
-        ctx.arc(smoothMouse.current.x, smoothMouse.current.y, 18, 0, Math.PI * 2);
-        ctx.strokeStyle = "hsla(170, 100%, 50%, 0.1)";
-        ctx.lineWidth = 4;
-        ctx.stroke();
-
-        // Inner dot at actual mouse position
-        ctx.beginPath();
-        ctx.arc(mouse.current.x, mouse.current.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = "hsl(170, 100%, 50%)";
-        ctx.shadowColor = "hsl(170, 100%, 50%)";
-        ctx.shadowBlur = 10;
-        ctx.fill();
-        ctx.shadowBlur = 0;
+      if (trail.current.length > 25) {
+        trail.current.shift();
       }
 
-      animId = requestAnimationFrame(draw);
+      // Draw trail particles and connecting lines
+      for (let i = 0; i < trail.current.length; i++) {
+        const p = trail.current[i];
+
+        ctx.fillStyle = "#37e2ff";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (i > 0) {
+          ctx.strokeStyle = "rgba(55,226,255,0.4)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(trail.current[i - 1].x, trail.current[i - 1].y);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+        }
+      }
+
+      animId = requestAnimationFrame(animate);
     };
 
     resize();
-    draw();
+    animate();
 
     window.addEventListener("mousemove", handleMove);
     window.addEventListener("resize", resize);
-    document.addEventListener("mouseleave", handleLeave);
-    document.addEventListener("mouseenter", handleEnter);
 
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("resize", resize);
-      document.removeEventListener("mouseleave", handleLeave);
-      document.removeEventListener("mouseenter", handleEnter);
     };
   }, []);
 
@@ -122,7 +87,6 @@ const CustomCursor = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 z-[9999] pointer-events-none"
-      style={{ cursor: "none" }}
     />
   );
 };
