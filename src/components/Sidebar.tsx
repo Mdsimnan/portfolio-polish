@@ -113,7 +113,6 @@ const Sidebar = ({ activeSection, onNavigate }: SidebarProps) => {
         <div className="w-full px-4 mt-4">
           <a
             href="resume.pdf"
-            download="Simnan_Data_Business_Analyst_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:shadow-[0_0_20px_hsl(170_100%_50%/0.3)] transition-all"
