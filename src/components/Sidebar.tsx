@@ -112,7 +112,8 @@ const Sidebar = ({ activeSection, onNavigate }: SidebarProps) => {
         {/* Download Resume */}
         <div className="w-full px-4 mt-4">
           <a
-            href="https://mdsimnan.github.io/Data_Analyst_Portfolio/Simnan_Data%20%26%20Business%20Analyst%20Resume.pdf"
+            href="/resume.pdf"
+            download="Simnan_Data_Business_Analyst_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-display text-xs tracking-wider hover:shadow-[0_0_20px_hsl(170_100%_50%/0.3)] transition-all"
